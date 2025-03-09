@@ -21,3 +21,16 @@ def check_null_population(minimum_percentage, data):
 
   return null_dict
 
+def preprocess_categorical(data, feature_name, mapping_dict):
+  # preprocess Alley
+  print(f"Value Counts for {feature_name} before preprocessing")
+  print(data[feature_name].value_counts())
+
+  data[feature_name] = data[feature_name].fillna(0)
+  data[feature_name] = data[feature_name].replace(mapping_dict)
+
+  # Explicitly infer data types
+  data[feature_name] = data[feature_name].infer_objects()
+
+  print(f"Value Counts for {feature_name} after preprocessing")
+  print(data[feature_name].value_counts())
