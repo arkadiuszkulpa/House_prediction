@@ -64,12 +64,12 @@ def preprocess_categorical(data, feature_name, mapping_dict):
 def filter_dataframes_by_percentage(df_dict, min_threshold=0.8, max_threshold=0.9):
     return {
         key: df for key, df in df_dict.items()
-        if df['percentage'].max() > min_threshold and df['percentage'].max() < max_threshold
+        if df['percentage'].max() > min_threshold and df['percentage'].max() <= max_threshold
     }
 
 def create_top_x_percentage_dict(data, min_percentage, max_percentage = 1):
   
-  data = filter_dataframes_by_percentage(data, 0, 0.8)
+  data = filter_dataframes_by_percentage(data, min_percentage, max_percentage)
   # data = {key: df for key, df in data.items() if ((df["percentage"] > min_percentage) & (df["percentage"] <= max_percentage)).any()}
 
   for x in data:
