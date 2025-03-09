@@ -61,9 +61,16 @@ def preprocess_categorical(data, feature_name, mapping_dict):
     print(f"Value Counts for '{feature_name}' after preprocessing:")
     print(data[feature_name].value_counts())
 
+def filter_dataframes_by_percentage(df_dict, min_threshold=0.8, max_threshold=0.9):
+    return {
+        key: df for key, df in df_dict.items()
+        if df['percentage'].max() > min_threshold and df['percentage'].max() < max_threshold
+    }
+
 def create_top_x_percentage_dict(data, min_percentage, max_percentage = 1):
   
-  data = {key: df for key, df in data.items() if ((df["percentage"] > min_percentage) & (df["percentage"] <= max_percentage)).any()}
+  data = filter_dataframes_by_percentage(data, 0, 0.8)
+  # data = {key: df for key, df in data.items() if ((df["percentage"] > min_percentage) & (df["percentage"] <= max_percentage)).any()}
 
   for x in data:
     dominant_value = data[x].query("binary == 1")[x].iloc[0]
