@@ -7,7 +7,8 @@ def turn_value_counts_into_percentages(value_counts_series):
   return value_percentages
 
 def add_binary_2_value_counts(df):
-  df["binary"] = df["count"].map(lambda x: 1 if x==df else 0)
+  value_percentage_df_max = df["count"].max()
+  df["binary"] = df["count"].map(lambda x: 1 if x==value_percentage_df_max else 0)
   return df
 
 def calculate_percentages_of_object_features(data):
@@ -23,8 +24,7 @@ def calculate_percentages_of_object_features(data):
 
     value_percentage_df = pd.DataFrame(d)
 
-    value_percentage_df_max = value_percentage_df["count"].max()
-    #print(value_percentage_df_max)
+
 
     # Add a binary column to the counts
     value_percentage_df = add_binary_2_value_counts(value_percentage_df)
