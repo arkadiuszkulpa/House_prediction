@@ -1,0 +1,35 @@
+import pandas as pd
+
+def turn_value_counts_into_percentages(value_counts_series):
+  value_counts_series = value_counts_series.sort_values(ascending=False)
+  sum_values = value_counts_series.sum()
+  value_percentages = [x/sum_values for x in value_counts_series]
+  return value_percentages
+
+def add_binary_2_value_counts(df):
+  df["binary"] = df["count"].map(lambda x: 1 if x==df else 0)
+  return df
+
+def calculate_percentages_of_object_features(data):
+  value_percentage_dict = {}
+
+  data = data.select_dtypes(include="object")
+  for feature in data:
+    value_counts = data[feature].value_counts()
+    value_percentages = turn_value_counts_into_percentages(value_counts)
+    d = {feature: value_counts.index,
+         "count": value_counts.values,
+         "percentage": value_percentages}
+
+    value_percentage_df = pd.DataFrame(d)
+
+    value_percentage_df_max = value_percentage_df["count"].max()
+    #print(value_percentage_df_max)
+
+    # Add a binary column to the counts
+    value_percentage_df = add_binary_2_value_counts(value_percentage_df)
+
+    value_percentage_dict[feature] = value_percentage_df
+  print(f"There are {len(data.columns)} object type columns in the data and {len(value_percentage_dict.keys())} object columns in the value_percentage_dict")
+  return value_percentage_dict
+
