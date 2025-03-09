@@ -63,7 +63,7 @@ def preprocess_categorical(data, feature_name, mapping_dict):
 
 def create_top_x_percentage_dict(data, min_percentage, max_percentage = 1):
   
-  data = {key: df for key, df in data.items() if ((df["percentage"] >= min_percentage) & (df["percentage"] < max_percentage)).any()}
+  data = {key: df for key, df in data.items() if ((df["percentage"] > min_percentage) & (df["percentage"] <= max_percentage)).any()}
 
   for x in data:
     dominant_value = data[x].query("binary == 1")[x].iloc[0]
