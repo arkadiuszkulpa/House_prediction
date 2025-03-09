@@ -60,3 +60,18 @@ def preprocess_categorical(data, feature_name, mapping_dict):
 
     print(f"Value Counts for '{feature_name}' after preprocessing:")
     print(data[feature_name].value_counts())
+
+def create_top_x_percentage_dict(data, top_percentage):
+  
+
+  data = {key: df for key, df in data.items() if ((df["percentage"] >= top_percentage) & & (df["percentage"] < 0.95)).any()}
+
+  for x in data:
+    dominant_value = data[x].query("binary == 1")[x].iloc[0]
+    dominant_percentage = data[x].query("binary == 1")["percentage"].iloc[0]
+    print(f"For Feature {x}, Value {dominant_value} constitutes {(dominant_percentage*100).round(2)}%")
+    #x_dominant = [x[x["binary"]
+    #print(f"{x.key} has a dominant value {x.}")
+
+  return data
+  #print(len(percentage_dict_95))

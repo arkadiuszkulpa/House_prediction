@@ -30,6 +30,6 @@ def calculate_percentages_of_object_features(data):
     value_percentage_df = add_binary_2_value_counts(value_percentage_df)
 
     value_percentage_dict[feature] = value_percentage_df
-  print(f"There are {len(data.columns)} object type columns in the data and {len(value_percentage_dict.keys())} object columns in the value_percentage_dict")
+  #print(f"There are {len(data.columns)} object type columns in the data and {len(value_percentage_dict.keys())} object columns in the value_percentage_dict")
   return value_percentage_dict
 
