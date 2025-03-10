@@ -68,8 +68,13 @@ def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, co
       if chart_type == "bar":
         chart.bar(feature.index, feature.values)
       else:
-        chart.hist(feature.index, feature.values)
-        chart.hist()
+        if feature.nunique() <= 2:  # Binary features
+          bins = [feature.min() - 0.5, feature.max() + 0.5]  # Ensures only 0 and 1 bins
+        else:
+            bins = min(10, len(feature.unique()))  # Use up to 10 bins, or unique values if fewer
+
+        chart.hist(feature.values, bins=bins)
+
 
 
 
