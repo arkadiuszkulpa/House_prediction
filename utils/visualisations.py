@@ -1,6 +1,6 @@
 import pandas as pd
 
-def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, columns, singlefigsize: tuple[int, int], objects_only):
+def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, columns, singlefigsize: tuple[int, int], objects_only, chart_type):
   """
   Displays bar charts for categorical (object-type) features in a given DataFrame.
 
@@ -65,7 +65,11 @@ def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, co
       feature = train_data[current_feature].value_counts()
       chart = axes[row, col]
       chart.set_title(feature.index.name)
-      chart.bar(feature.index, feature.values)
+      if chart_type == "bar":
+        chart.bar(feature.index, feature.values)
+      else:
+        chart.hist(feature.index, feature.values)
+        chart.hist()
 
 
 
