@@ -11,10 +11,8 @@ def add_binary_2_value_counts(df):
   df["binary"] = df["count"].map(lambda x: 1 if x==value_percentage_df_max else 0)
   return df
 
-def calculate_percentages_of_object_features(data):
+def calculate_percentages_of_features(data):
   value_percentage_dict = {}
-
-  data = data.select_dtypes(include="object")
   for feature in data:
     value_counts = data[feature].value_counts()
     value_percentages = turn_value_counts_into_percentages(value_counts)
