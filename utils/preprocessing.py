@@ -81,3 +81,46 @@ def create_top_x_percentage_dict(data, min_percentage, max_percentage = 1):
 
   return data
   #print(len(percentage_dict_95))
+
+import datetime
+import data_exploration
+
+def replace_year_feature_with_age(feature, new_feature_name, data):
+  """
+  Replaces a given year-based feature in a dataset with the corresponding age and removes the original feature.
+
+  Parameters:
+  -----------
+  feature : str
+      The column name in the dataset representing a year.
+  new_feature_name : str
+      The name of the new column that will store the computed age.
+  data : pandas.DataFrame
+      The dataset containing the feature column.
+
+  Returns:
+  --------
+  pandas.DataFrame
+      The modified dataset with the new age feature and the original feature removed.
+
+  Notes:
+  ------
+  - The function calculates age by subtracting the year values in `feature` from the current year.
+  - If `feature` is not found in the dataset, it prints "Feature Not Found".
+  - If `feature` is already deleted or missing, it prints "Feature already deleted".
+  - Prints the new feature values and the correlation check result using `check_correlation(new_feature_name)`.
+  - Assumes `check_correlation` is a predefined function that takes the new feature name as input.
+  """
+  current_year = datetime.date.today().year
+  try:
+    data[new_feature_name] = current_year - data[feature]
+  except:
+    print("Feature Not Found")
+  try:
+    data = data.drop(columns = [feature], axis=1)
+  except:
+    print("Feature already deleted")
+  print(data[new_feature_name])
+  check_corr = data_exploration.check_correlation(new_feature_name)
+  print(check_corr)
+  return data
