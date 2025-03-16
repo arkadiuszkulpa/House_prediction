@@ -83,7 +83,7 @@ def create_top_x_percentage_dict(data, min_percentage, max_percentage = 1):
   #print(len(percentage_dict_95))
 
 import datetime
-import data_exploration
+from . import data_exploration
 
 def replace_year_feature_with_age(feature, new_feature_name, data):
   """
