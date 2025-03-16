@@ -83,9 +83,8 @@ def create_top_x_percentage_dict(data, min_percentage, max_percentage = 1):
   #print(len(percentage_dict_95))
 
 import datetime
-from . import data_exploration
 
-def replace_year_feature_with_age(feature, new_feature_name, data):
+def replace_year_feature_with_age(feature, new_feature_name, train_data):
   """
   Replaces a given year-based feature in a dataset with the corresponding age and removes the original feature.
 
@@ -113,14 +112,11 @@ def replace_year_feature_with_age(feature, new_feature_name, data):
   """
   current_year = datetime.date.today().year
   try:
-    data[new_feature_name] = current_year - data[feature]
+    train_data[new_feature_name] = current_year - train_data[feature]
   except:
     print("Feature Not Found")
   try:
-    data = data.drop(columns = [feature], axis=1)
+    train_data = train_data.drop(columns = [feature], axis=1)
   except:
     print("Feature already deleted")
-  print(data[new_feature_name])
-  check_corr = data_exploration.check_correlation(new_feature_name)
-  print(check_corr)
-  return data
+  return train_data
