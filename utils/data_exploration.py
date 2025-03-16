@@ -31,8 +31,8 @@ def calculate_percentages_of_features(data):
   #print(f"There are {len(data.columns)} object type columns in the data and {len(value_percentage_dict.keys())} object columns in the value_percentage_dict")
   return value_percentage_dict
 
-def check_correlation(feature_name):
-  reintroducing_price_df = X_train.join(train_data['SalePrice'], how='left')
+def check_correlation(feature_name, train_data, all_data):
+  reintroducing_price_df = train_data.join(all_data['SalePrice'], how='left')
   feature_correlation = reintroducing_price_df[[feature_name, 'SalePrice']].corr()
   #print(feature_correlation)  # Check correlation
   return feature_correlation
