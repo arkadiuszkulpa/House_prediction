@@ -143,6 +143,9 @@ def null_imputation_preprocessing(data):
   Returns:
   pd.DataFrame: The transformed dataset with imputed values and encoded categorical features.
   """
+  # Set the future behavior option
+  pd.set_option('future.no_silent_downcasting', True)
+
   categorical_mappings = {
     "Alley": {'Grvl': 1, 'Pave': 2},
     "PoolQC": {'Gd': 1, 'Ex': 1, 'Fa': 1},
