@@ -120,3 +120,84 @@ def replace_year_feature_with_age(feature, new_feature_name, train_data):
   except:
     print("Feature already deleted")
   return train_data
+
+from sklearn.impute import KNNImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
+import numpy as np
+
+def null_imputation_preprocessing(data):
+  """
+  Preprocesses categorical and numerical features in the dataset by applying categorical encoding and 
+  imputing missing numerical values using KNN imputation.
+
+  Steps:
+  1. Encode specific categorical features using predefined mappings.
+  2. Apply label encoding to selected categorical columns.
+  3. Impute missing values in numerical columns using KNN imputation.
+
+  Parameters:
+  data (pd.DataFrame): The input dataset containing missing values and categorical features.
+
+  Returns:
+  pd.DataFrame: The transformed dataset with imputed values and encoded categorical features.
+  """
+  categorical_mappings = {
+    "Alley": {'Grvl': 1, 'Pave': 2},
+    "PoolQC": {'Gd': 1, 'Ex': 1, 'Fa': 1},
+    "Fence": {'MnPrv': 1, 'MnWw': 1, 'GdPrv': 2, 'GdWo': 2},
+    "MiscFeature": {'Shed': 1, 'Gar2': 2, 'Othr': 3, 'TenC': 4},
+    "MasVnrType": {'BrkCmn': 1, 'BrkFace': 2, 'CBlock': 3, 'Stone': 4},
+    "BsmtExposure": {'No': 1, 'Mn': 2, 'Av': 3, 'Gd': 4},
+    "GarageFinish": {'Unf': 1, 'RFn': 2, 'Fin': 3}
+  }
+
+  for column, mapping in categorical_mappings.items():
+    preprocess_categorical(data, column, mapping)
+
+  mapping = {'Po': 1, 'Fa': 2, 'TA': 3, 'Gd': 4, 'Ex': 5}
+  feature_names = ["FireplaceQu", "BsmtQual", "BsmtCond", "GarageQual", "GarageCond"]
+  for x in feature_names:
+    preprocess_categorical(data, x, mapping)
+
+  mapping = {'Unf': 1, 'LwQ': 2, 'Rec': 3, 'BLQ': 4, 'ALQ': 5, 'GLQ': 6}
+  feature_names = ["BsmtFinType1", "BsmtFinType2"]
+  for x in feature_names:
+    preprocess_categorical(data, x, mapping)
+
+  feature_names_label_encoding = ["Electrical", "GarageType"]
+  label_encoder = LabelEncoder()
+  
+  debug = False
+  encoding_results = {}
+
+  for feature in feature_names_label_encoding:
+
+    encoding_results[feature] = {
+        "before": data[feature].value_counts(),
+        "after": None
+    }
+
+    data[feature] = label_encoder.fit_transform(data[feature])
+    encoding_results[feature]["after"] = data[feature].value_counts()
+
+  if debug:
+    for feature, results in encoding_results.items():
+      print(f"Value Counts before encoding for {feature}:\n{results['before']}")
+      print(f"Value Counts after encoding for {feature}:\n{results['after']}")
+
+  # Impute remaining nulls using knn
+  features_to_impute = ["LotFrontage", "MasVnrArea", "GarageYrBlt"]
+  df_knn = data[features_to_impute]
+  scaler = StandardScaler()
+  df_knn_scaled = scaler.fit_transform(df_knn)
+  imputer = KNNImputer(n_neighbors=5)  # Choose k based on dataset size
+  df_knn_imputed = imputer.fit_transform(df_knn_scaled)
+  df_knn_original = scaler.inverse_transform(df_knn_imputed)
+  data[features_to_impute] = df_knn_original  # Update original dataframe
+  print(data[features_to_impute].isnull().sum())
+
+  return data
+
+
