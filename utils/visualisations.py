@@ -75,6 +75,14 @@ def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, co
 
         chart.hist(feature.values, bins=bins)
 
+def visualise_scatter_val_pred(val_data, pred_data):
+  dx = range(1, max(max(val_data), max(pred_data)))
+  dy = dx
+
+  plt.scatter(val_data, pred_data)
+  plt.plot(dx, dy)
+  plt.show()
+
 
 
 
