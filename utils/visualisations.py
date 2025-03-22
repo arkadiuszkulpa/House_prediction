@@ -76,13 +76,20 @@ def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, co
         chart.hist(feature.values, bins=bins)
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 def visualise_scatter_val_pred(val_data, pred_data):
-  dx = range(1, max(max(val_data), max(pred_data)))
+  min_val = min(min(val_data), min(pred_data))
+  max_val = max(max(val_data), max(pred_data))
+  dx = np.linspace(min_val, max_val, 100)
   dy = dx
-
-  plt.scatter(val_data, pred_data)
+  plt.scatter(val_data, pred_data, alpha=0.6)
   plt.plot(dx, dy)
+  plt.xlabel('Actual Log Price')
+  plt.ylabel('Predicted Log Price')
+  plt.title('Validation Set: Actual vs Predicted (Log Scale)')
+  plt.grid(True)
+
   plt.show()
 
 
