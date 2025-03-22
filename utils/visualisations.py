@@ -78,7 +78,7 @@ def displayObjectFeatures(feature_names: pd.Series, train_data: pd.DataFrame, co
 import matplotlib.pyplot as plt
 
 def visualise_scatter_val_pred(val_data, pred_data):
-  dx = range(1, max(max(val_data), max(pred_data)))
+  dx = range(1, int(max(max(val_data), max(pred_data))))
   dy = dx
 
   plt.scatter(val_data, pred_data)
