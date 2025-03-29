@@ -74,9 +74,7 @@ def kfold_rmse_with_early_stop(model_init_func, X, y, n_splits=5, early_stopping
         X_tr, X_val = X.iloc[train_idx], X.iloc[val_idx]
         y_tr, y_val = y.iloc[train_idx], y.iloc[val_idx]
 
-        params = xgb_model()
-
-        booster = train_xgb_model(params, X_tr, y_tr, X_val, y_val, verbose=False)
+        booster = train_xgb_model(model_init_func, X_tr, y_tr, X_val, y_val, verbose=False)
 
         dval = xgb.DMatrix(X_val, label=y_val)
         y_pred = booster.predict(dval)
