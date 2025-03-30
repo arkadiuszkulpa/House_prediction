@@ -33,12 +33,14 @@ def rmse_predict(model, X_val, log_y_val, dmatrix=False, y_log=False):
   return rmse_val, log_y_pred_flat
 
 ### xgb_model
-def xgb_model(learning_rate=0.05, max_depth=5, subsample=0.8, colsample_bytree=0.8, eval_metric='rmse', objective='reg:squarederror', seed=42):
+def xgb_model(learning_rate=0.06, max_depth=4, subsample=0.85, colsample_bytree=0.6, min_child_weight=5, gamma=0, eval_metric='rmse', objective='reg:squarederror', seed=42):
     return {
         'learning_rate': learning_rate,
         'max_depth': max_depth,
         'subsample': subsample,
         'colsample_bytree': colsample_bytree,
+        'min_child_weight': min_child_weight,
+        'gamma': gamma,
         'eval_metric': eval_metric,
         'objective': objective,
         'seed': seed
