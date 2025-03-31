@@ -33,19 +33,21 @@ def rmse_predict(model, X_val, log_y_val, dmatrix=False, y_log=False):
   return rmse_val, log_y_pred_flat
 
 ### xgb_model
-def xgb_model(learning_rate=0.05, max_depth=5, subsample=0.8, colsample_bytree=0.8, eval_metric='rmse', objective='reg:squarederror', seed=42):
+def xgb_model(learning_rate=0.06, max_depth=4, subsample=0.85, colsample_bytree=0.6, min_child_weight=5, gamma=0, eval_metric='rmse', objective='reg:squarederror', seed=42):
     return {
         'learning_rate': learning_rate,
         'max_depth': max_depth,
         'subsample': subsample,
         'colsample_bytree': colsample_bytree,
+        'min_child_weight': min_child_weight,
+        'gamma': gamma,
         'eval_metric': eval_metric,
         'objective': objective,
         'seed': seed
     }
 
 ### train_xgb_model
-def train_xgb_model(params, X_train, y_train, X_val, y_val, num_boost_round=500, early_stopping_rounds=10, verbose=False):
+def train_xgb_model(params, X_train, y_train, X_val, y_val, num_boost_round=5000, early_stopping_rounds=10, verbose=False):
 
     dtrain = xgb.DMatrix(X_train, label=y_train)
     dval = xgb.DMatrix(X_val, label=y_val)
@@ -69,21 +71,20 @@ from sklearn.model_selection import KFold
 def kfold_rmse_with_early_stop(model_init_func, X, y, n_splits=5, early_stopping_rounds=10):
     kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
     rmse_scores = []
-
+    best_iters = []
     for train_idx, val_idx in kf.split(X):
         X_tr, X_val = X.iloc[train_idx], X.iloc[val_idx]
         y_tr, y_val = y.iloc[train_idx], y.iloc[val_idx]
 
-        params = xgb_model()
-
-        booster = train_xgb_model(params, X_tr, y_tr, X_val, y_val, verbose=False)
+        booster = train_xgb_model(model_init_func, X_tr, y_tr, X_val, y_val, verbose=False)
 
         dval = xgb.DMatrix(X_val, label=y_val)
         y_pred = booster.predict(dval)
         rmse, log_y_pred_flat = rmse_predict(booster, X_val, y_val,dmatrix=True, y_log=False)
         rmse_scores.append(rmse)
+        best_iters.append(booster.best_iteration +1)
 
-    return rmse_scores, np.mean(rmse_scores)
+    return rmse_scores, np.mean(rmse_scores), best_iters
 
 # Top Level xgb_single_parameter_tuner
 
